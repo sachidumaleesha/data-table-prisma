@@ -556,7 +556,7 @@ export const CalendarDatePicker = React.forwardRef<
             >
               <div className="flex">
                 {numberOfMonths === 2 && (
-                  <div className="flex flex-col gap-1 pr-4 text-left border-r border-foreground/10">
+                  <div className="md:flex flex-col gap-1 pr-4 text-left border-r border-foreground/10 hidden">
                     {dateRanges.map(({ label, start, end }) => (
                       <Button
                         key={label}

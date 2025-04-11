@@ -27,6 +27,7 @@ import {
 
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { DataTableToolbar } from "./_components/data-table-toolbar";
+import { getCommonPinningStyles } from "@/lib/data-table"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -80,6 +81,9 @@ export function DataTable<TData, TValue>({
                     className="px-4 py-2"
                     key={header.id}
                     colSpan={header.colSpan}
+                    style={{
+                      ...getCommonPinningStyles({ column: header.column }),
+                    }}
                   >
                     {header.isPlaceholder
                       ? null
@@ -100,7 +104,9 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="px-4 py-2" key={cell.id}>
+                    <TableCell className="px-4 py-2" key={cell.id} style={{
+                      ...getCommonPinningStyles({ column: cell.column }),
+                    }}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
