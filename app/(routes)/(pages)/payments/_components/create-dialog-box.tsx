@@ -48,8 +48,8 @@ export function CreateTaskDialog() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline" size="sm" className="cursor-pointer">
-            <CirclePlus className="size-4" aria-hidden="true" />
+          <Button variant="outline" size="sm" className="flex items-center cursor-pointer">
+            <CirclePlus className="mr-1 size-4" aria-hidden="true" />
             Add
           </Button>
         </DialogTrigger>
@@ -85,8 +85,8 @@ export function CreateTaskDialog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline" size="sm">
-          <PlusIcon className="mr-2 size-4" aria-hidden="true" />
+        <Button variant="outline" size="sm" className="flex items-center cursor-pointer">
+          <PlusIcon className="mr-1 size-4" aria-hidden="true" />
           New task
         </Button>
       </DrawerTrigger>

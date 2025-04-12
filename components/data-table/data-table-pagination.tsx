@@ -38,11 +38,11 @@ export function DataTablePagination<TData>({
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px] cursor-pointer">
+            <SelectTrigger className="h-8 w-[72px] cursor-pointer">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {[10, 20, 30, 40, 50, 100].map((pageSize) => (
                 <SelectItem
                   key={pageSize}
                   value={`${pageSize}`}
@@ -66,11 +66,11 @@ export function DataTablePagination<TData>({
               table.setPageSize(Number(value));
             }}
           >
-            <SelectTrigger className="h-8 w-[70px] cursor-pointer">
+            <SelectTrigger className="h-8 w-[72px] cursor-pointer">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {[10, 20, 30, 40, 50, 100].map((pageSize) => (
                 <SelectItem
                   key={pageSize}
                   value={`${pageSize}`}

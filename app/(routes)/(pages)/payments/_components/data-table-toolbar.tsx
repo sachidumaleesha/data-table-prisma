@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { DataTableFilterField } from "@/types";
 
 import { Cross2Icon } from "@radix-ui/react-icons";
@@ -23,9 +23,16 @@ interface DataTableToolbarProps<TData>
 
 export function DataTableToolbar<TData>({
   table,
-  filterFields = []
+  filterFields = [],
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+
+  const { searchableColumns, filterableColumns } = React.useMemo(() => {
+    return {
+      searchableColumns: filterFields.filter((field) => !field.options),
+      filterableColumns: filterFields.filter((field) => field.options),
+    };
+  }, [filterFields]);
 
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: new Date(new Date().getFullYear(), 0, 1),
@@ -34,68 +41,60 @@ export function DataTableToolbar<TData>({
 
   const handleDateSelect = ({ from, to }: { from: Date; to: Date }) => {
     setDateRange({ from, to });
-    // Filter table data based on selected date range
-    table.getColumn("date")?.setFilterValue([from, to]);
+    table.getColumn("createdAt")?.setFilterValue([from, to]);
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between">
-      <div className="flex flex-1 flex-wrap items-center gap-2">
-        <Input
-          placeholder="Filter labels..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => {
-            table.getColumn("title")?.setFilterValue(event.target.value);
-          }}
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
+    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      {/* Left side filters */}
+      <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 w-full">
+        {searchableColumns.map(
+          (column) =>
+            table.getColumn(column.value ? String(column.value) : "") && (
+              <Input
+                key={String(column.value)}
+                placeholder={column.placeholder}
+                value={
+                  (table
+                    .getColumn(String(column.value))
+                    ?.getFilterValue() as string) ?? ""
+                }
+                onChange={(event) =>
+                  table
+                    .getColumn(String(column.value))
+                    ?.setFilterValue(event.target.value)
+                }
+                className="h-8 w-full md:w-64 col-span-2"
+              />
+            )
+        )}
 
-        {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={[
-              { label: "To Do", value: "TODO" },
-              { label: "In Progress", value: "IN_PROGRESS" },
-              { label: "Done", value: "DONE" },
-              { label: "Cancelled", value: "CANCELLED" },
-            ]}
-          />
+        {filterableColumns.map(
+          (column) =>
+            table.getColumn(column.value ? String(column.value) : "") && (
+              <DataTableFacetedFilter
+                key={String(column.value)}
+                column={table.getColumn(
+                  column.value ? String(column.value) : ""
+                )}
+                title={column.label}
+                options={column.options ?? []}
+              />
+            )
         )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={[
-              { label: "Low", value: "LOW" },
-              { label: "Medium", value: "MEDIUM" },
-              { label: "High", value: "HIGH" },
-            ]}
-          />
-        )}
-        {table.getColumn("label") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("label")}
-            title="Label"
-            options={[
-              { label: "Bug", value: "BUG" },
-              { label: "Feature", value: "FEATURE" },
-              { label: "Enhancement", value: "ENHANCEMENT" },
-              { label: "Documentation", value: "DOCUMENTATION" },
-            ]}
-          />
-        )}
+
         <CalendarDatePicker
           date={dateRange}
           onDateSelect={handleDateSelect}
-          className="h-9 cursor-pointer"
+          className="h-9 cursor-pointer hidden md:flex"
           variant="outline"
         />
+
         {isFiltered && (
           <Button
             variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3 cursor-pointer"
+            className="h-8 px-2 lg:px-3"
           >
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
@@ -103,13 +102,14 @@ export function DataTableToolbar<TData>({
         )}
       </div>
 
-      <div className="flex items-center gap-2">
-        {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-          <Button variant="outline" size="sm" className="cursor-pointer">
+      {/* Right side controls */}
+      <div className="grid grid-cols-2 md:flex gap-2 items-center w-full md:w-auto justify-end">
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <Button variant="outline" size="sm">
             <TrashIcon className="mr-2 size-4" aria-hidden="true" />
             Delete ({table.getFilteredSelectedRowModel().rows.length})
           </Button>
-        ) : null}
+        )}
         <CreateTaskDialog />
         <DataTableExportActions table={table} />
         <DataTableViewOptions table={table} />

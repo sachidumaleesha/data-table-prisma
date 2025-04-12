@@ -1,4 +1,4 @@
-import { type Task, Label, Priority, Status } from "@prisma/client";
+import { Label, Priority, Status } from "@prisma/client";
 import {
   ArrowDownIcon,
   ArrowRightIcon,

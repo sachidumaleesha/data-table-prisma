@@ -26,19 +26,22 @@ import {
 } from "@/components/ui/table";
 
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
-import { DataTableToolbar } from "./_components/data-table-toolbar";
+import { DataTableToolbar } from "../../app/(routes)/(pages)/payments/_components/data-table-toolbar";
 import { getCommonPinningStyles } from "@/lib/data-table";
 import { DataTableFilterField } from "@/types";
 import { type Task } from "@prisma/client";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData, TValue>
+  extends React.HTMLAttributes<HTMLDivElement> {
   data: TData[];
+  columns: ColumnDef<TData, TValue>[];
+  filterFields?: DataTableFilterField<TData>[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Task, TValue>({
   columns,
   data,
+  filterFields = [],
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -70,37 +73,9 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  // const filterFields: DataTableFilterField<Task>[] = [
-  //   {
-  //     label: "Title",
-  //     value: "title",
-  //     placeholder: "Filter titles...",
-  //   },
-  //   {
-  //     label: "Status",
-  //     value: "status",
-  //     options: tasks.status.enumValues.map((status) => ({
-  //       label: status[0]?.toUpperCase() + status.slice(1),
-  //       value: status,
-  //       icon: getStatusIcon(status),
-  //       withCount: true,
-  //     })),
-  //   },
-  //   {
-  //     label: "Priority",
-  //     value: "priority",
-  //     options: tasks.priority.enumValues.map((priority) => ({
-  //       label: priority[0]?.toUpperCase() + priority.slice(1),
-  //       value: priority,
-  //       icon: getPriorityIcon(priority),
-  //       withCount: true,
-  //     })),
-  //   },
-  // ]
-
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table}  />
+      <DataTableToolbar table={table} filterFields={filterFields} />
       <div className="overflow-y-auto rounded-md border">
         <Table>
           <TableHeader>

@@ -3,14 +3,14 @@
 import { type Task, Label, Priority, Status } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { DataTableRowActions } from "./_components/data-table-row-actions";
+import { DataTableRowActions } from "./data-table-row-actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 
 import { TrendingUp, TrendingDown } from "lucide-react";
-import { getLabelIcon, getPriorityIcon, getStatusIcon } from "./_lib/utils";
+import { getLabelIcon, getPriorityIcon, getStatusIcon } from "../_lib/utils";
 
-export const columns: ColumnDef<Task>[] = [
+export const Columns: ColumnDef<Task>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -35,17 +35,6 @@ export const columns: ColumnDef<Task>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  // {
-  //   accessorKey: "id",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="ID" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return <div className="">{row.getValue("id")}</div>;
-  //   },
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
   {
     accessorKey: "taskCode",
     header: ({ column }) => (
@@ -55,7 +44,7 @@ export const columns: ColumnDef<Task>[] = [
       <div className="w-[150px] capitalize">{row.getValue("taskCode")}</div>
     ),
     enableSorting: false,
-    enableHiding: false,
+    // enableHiding: false,
   },
   {
     accessorKey: "title",
@@ -77,7 +66,6 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
-    // cell: ({ row }) => getStatusBadge(row.getValue("status")),
     cell: ({ row }) => {
       const status = row.getValue("status");
 
@@ -172,7 +160,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date" />
+      <DataTableColumnHeader column={column} title="Created At" />
     ),
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));

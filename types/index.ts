@@ -12,6 +12,7 @@ export interface Option {
 export interface DataTableFilterField<TData> {
   label: string;
   value: keyof TData;
+  className?: string;
   placeholder?: string;
   options?: Option[];
 }
