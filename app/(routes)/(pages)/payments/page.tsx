@@ -1,24 +1,16 @@
 import { Metadata } from "next";
-import { promises as fs } from "fs";
-import path from "path";
-import { z } from "zod";
-import { expenseSchema } from "./data/schema";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import { db } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Expenses",
-  description: "A Expense tracker build using Tanstack Table.",
+  title: "Task",
+  description: "A Task tracker build using Tanstack Table.",
 };
 
 async function getData() {
-  const data = await fs.readFile(
-    path.join(process.cwd(), "app/(routes)/(pages)/payments/data/data.json")
-  );
-
-  const tasks = JSON.parse(data.toString());
-
-  return z.array(expenseSchema).parse(tasks);
+  const taskData = await db.task.findMany()
+  return taskData
 }
 
 export default async function Page() {

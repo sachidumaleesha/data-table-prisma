@@ -1,25 +1,29 @@
 "use client";
 
+import { useState } from "react";
+import { DataTableFilterField } from "@/types";
+
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { TrashIcon } from "lucide-react";
 import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { incomeType, categories } from "../data/data";
 import { DataTableFacetedFilter } from "@/components/data-table/data-table-faceted-filter";
 import { CalendarDatePicker } from "@/components/data-table/calendar-date-picker";
-import { useState } from "react";
 import { DataTableViewOptions } from "@/components/data-table/data-table-view-options";
 import { DataTableExportActions } from "@/components/data-table/data-table-export-actions";
 import { CreateTaskDialog } from "./create-dialog-box";
 
-interface DataTableToolbarProps<TData> {
+interface DataTableToolbarProps<TData>
+  extends React.HTMLAttributes<HTMLDivElement> {
   table: Table<TData>;
+  filterFields?: DataTableFilterField<TData>[];
 }
 
 export function DataTableToolbar<TData>({
   table,
+  filterFields = []
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -39,24 +43,46 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 flex-wrap items-center gap-2">
         <Input
           placeholder="Filter labels..."
-          value={(table.getColumn("note")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) => {
-            table.getColumn("note")?.setFilterValue(event.target.value);
+            table.getColumn("title")?.setFilterValue(event.target.value);
           }}
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("category") && (
+
+        {table.getColumn("status") && (
           <DataTableFacetedFilter
-            column={table.getColumn("category")}
-            title="Category"
-            options={categories}
+            column={table.getColumn("status")}
+            title="Status"
+            options={[
+              { label: "To Do", value: "TODO" },
+              { label: "In Progress", value: "IN_PROGRESS" },
+              { label: "Done", value: "DONE" },
+              { label: "Cancelled", value: "CANCELLED" },
+            ]}
           />
         )}
-        {table.getColumn("type") && (
+        {table.getColumn("priority") && (
           <DataTableFacetedFilter
-            column={table.getColumn("type")}
-            title="Type"
-            options={incomeType}
+            column={table.getColumn("priority")}
+            title="Priority"
+            options={[
+              { label: "Low", value: "LOW" },
+              { label: "Medium", value: "MEDIUM" },
+              { label: "High", value: "HIGH" },
+            ]}
+          />
+        )}
+        {table.getColumn("label") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("label")}
+            title="Label"
+            options={[
+              { label: "Bug", value: "BUG" },
+              { label: "Feature", value: "FEATURE" },
+              { label: "Enhancement", value: "ENHANCEMENT" },
+              { label: "Documentation", value: "DOCUMENTATION" },
+            ]}
           />
         )}
         <CalendarDatePicker

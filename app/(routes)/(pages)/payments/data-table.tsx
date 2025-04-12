@@ -27,7 +27,9 @@ import {
 
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import { DataTableToolbar } from "./_components/data-table-toolbar";
-import { getCommonPinningStyles } from "@/lib/data-table"
+import { getCommonPinningStyles } from "@/lib/data-table";
+import { DataTableFilterField } from "@/types";
+import { type Task } from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,7 +44,7 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+    []
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -68,9 +70,37 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  // const filterFields: DataTableFilterField<Task>[] = [
+  //   {
+  //     label: "Title",
+  //     value: "title",
+  //     placeholder: "Filter titles...",
+  //   },
+  //   {
+  //     label: "Status",
+  //     value: "status",
+  //     options: tasks.status.enumValues.map((status) => ({
+  //       label: status[0]?.toUpperCase() + status.slice(1),
+  //       value: status,
+  //       icon: getStatusIcon(status),
+  //       withCount: true,
+  //     })),
+  //   },
+  //   {
+  //     label: "Priority",
+  //     value: "priority",
+  //     options: tasks.priority.enumValues.map((priority) => ({
+  //       label: priority[0]?.toUpperCase() + priority.slice(1),
+  //       value: priority,
+  //       icon: getPriorityIcon(priority),
+  //       withCount: true,
+  //     })),
+  //   },
+  // ]
+
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table}  />
       <div className="overflow-y-auto rounded-md border">
         <Table>
           <TableHeader>
@@ -81,15 +111,15 @@ export function DataTable<TData, TValue>({
                     className="px-4 py-2"
                     key={header.id}
                     colSpan={header.colSpan}
-                    style={{
-                      ...getCommonPinningStyles({ column: header.column }),
-                    }}
+                    // style={{
+                    //   ...getCommonPinningStyles({ column: header.column }),
+                    // }}
                   >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -104,12 +134,16 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="px-4 py-2" key={cell.id} style={{
-                      ...getCommonPinningStyles({ column: cell.column }),
-                    }}>
+                    <TableCell
+                      className="px-4 py-2"
+                      key={cell.id}
+                      // style={{
+                      //   ...getCommonPinningStyles({ column: cell.column }),
+                      // }}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

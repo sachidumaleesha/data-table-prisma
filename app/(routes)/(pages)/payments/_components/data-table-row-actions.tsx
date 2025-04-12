@@ -3,8 +3,6 @@
 import type { Row } from "@tanstack/react-table";
 import { CircleAlertIcon, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-
-// import { labels } from "../data/data";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,8 +17,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { expenseSchema } from "../data/schema";
 import { labels } from "../data/data";
 
 import {
@@ -34,17 +30,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { type Task } from "@prisma/client";
 
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>;
-  onDelete?: (id: string) => Promise<void>;
+interface DataTableRowActionsProps {
+  row: Row<Task>;
 }
 
-export function DataTableRowActions<TData>({
-  row,
-  onDelete,
-}: DataTableRowActionsProps<TData>) {
-  const task = expenseSchema.parse(row.original);
+export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+  const task = row.original;
   const [isDialogBoxOpen, setIsDialogBoxOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -52,15 +45,10 @@ export function DataTableRowActions<TData>({
     try {
       setIsDeleting(true);
 
-      // If onDelete prop is provided, use it
-      if (onDelete) {
-        await onDelete(task.id);
-      } else {
-        // Simulate deletion with a timeout if no onDelete handler is provided
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        toast.success("Task deleted successfully");
-        console.log("Deleted task:", task);
-      }
+      // Simulate deletion with a timeout if no onDelete handler is provided
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Task deleted successfully");
+      console.log("Deleted task:", task.id);
     } catch (error) {
       toast.error("Failed to delete task");
       console.error("Error deleting task:", error);
