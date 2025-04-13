@@ -94,7 +94,7 @@ export function DataTableToolbar<TData>({
           <Button
             variant="ghost"
             onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
+            className="h-8 px-2 lg:px-3 cursor-pointer"
           >
             Reset
             <Cross2Icon className="ml-2 h-4 w-4" />
@@ -105,8 +105,8 @@ export function DataTableToolbar<TData>({
       {/* Right side controls */}
       <div className="grid grid-cols-2 md:flex gap-2 items-center w-full md:w-auto justify-end">
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <Button variant="outline" size="sm">
-            <TrashIcon className="mr-2 size-4" aria-hidden="true" />
+          <Button variant="outline" size="sm" className="order-4 md:order-1">
+            <TrashIcon className="mr-1 size-4" aria-hidden="true" />
             Delete ({table.getFilteredSelectedRowModel().rows.length})
           </Button>
         )}
