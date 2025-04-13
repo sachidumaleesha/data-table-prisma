@@ -1,3 +1,4 @@
+import React from "react";
 import { Metadata } from "next";
 import { db } from "@/lib/db";
 import TaskTable from "./_components/task-table";

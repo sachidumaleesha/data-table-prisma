@@ -7,6 +7,7 @@ import { DataTableFilterField } from "@/types";
 import { Label, Priority, Status, type Task } from "@prisma/client";
 import { getLabelIcon, getPriorityIcon, getStatusIcon } from "../_lib/utils";
 import { DataTable } from "@/components/data-table/data-table";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 
 interface TaskDataTableProps<TData> {
   data: TData[];
@@ -63,7 +64,19 @@ export default function TaskTable<TData extends Task>({
           </p>
         </div>
       </div>
-      <DataTable data={data} columns={columns} filterFields={filterFields} />
+      <React.Suspense
+        fallback={
+          <DataTableSkeleton
+            columnCount={5}
+            searchableColumnCount={1}
+            filterableColumnCount={2}
+            cellWidths={["10rem", "40rem", "12rem", "12rem", "8rem"]}
+            shrinkZero
+          />
+        }
+      >
+        <DataTable data={data} columns={columns} filterFields={filterFields} />
+      </React.Suspense>
     </div>
   );
 }
