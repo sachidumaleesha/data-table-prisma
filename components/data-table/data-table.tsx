@@ -29,7 +29,6 @@ import { DataTablePagination } from "@/components/data-table/data-table-paginati
 import { DataTableToolbar } from "../../app/(routes)/(pages)/payments/_components/data-table-toolbar";
 import { getCommonPinningStyles } from "@/lib/data-table";
 import { DataTableFilterField } from "@/types";
-import { type Task } from "@prisma/client";
 
 interface DataTableProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -38,7 +37,7 @@ interface DataTableProps<TData, TValue>
   filterFields?: DataTableFilterField<TData>[];
 }
 
-export function DataTable<TData extends Task, TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
   filterFields = [],

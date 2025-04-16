@@ -208,7 +208,7 @@ export function DataTableFacetedFilter<TData, TValue>({
             </DrawerDescription>
           </DrawerHeader>
           <div className="px-3">
-            <Command>
+            <Command className="white:bg-gray-100 py-2">
               <CommandInput placeholder={title} />
               <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>
@@ -250,7 +250,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     <CommandGroup>
                       <CommandItem
                         onSelect={clearFilters}
-                        className="justify-center text-center cursor-pointer mt-3 border border-dashed w-full py-2"
+                        className="justify-center text-center cursor-pointer my-1 border border-dashed w-full py-2"
                       >
                         Clear filters
                       </CommandItem>

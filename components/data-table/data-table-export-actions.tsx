@@ -110,21 +110,21 @@ export function DataTableExportActions<TData>({
       value: "pdf",
       icon: FileIcon,
       exportFn: exportTableToPDF,
-      defaultFilename: "task_data",
+      defaultFilename: "data",
     },
     {
       label: "Excel (XLSX)",
       value: "xlsx",
       icon: FileSpreadsheetIcon,
       exportFn: exportTableToXLSX,
-      defaultFilename: "task_data",
+      defaultFilename: "data",
     },
     {
       label: "CSV",
       value: "csv",
       icon: FileTextIcon,
       exportFn: exportTableToCSV,
-      defaultFilename: "task_data",
+      defaultFilename: "data",
     },
   ];
 

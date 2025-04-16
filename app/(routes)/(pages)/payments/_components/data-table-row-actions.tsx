@@ -1,5 +1,3 @@
-"use client";
-
 import type { Row } from "@tanstack/react-table";
 import { CircleAlertIcon, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
@@ -31,6 +29,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { type Task } from "@prisma/client";
+import { deleteTasks } from "@/actions/task";
+import { db } from "@/lib/db";
+import axios from "axios";
 
 interface DataTableRowActionsProps {
   row: Row<Task>;
@@ -45,13 +46,48 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
     try {
       setIsDeleting(true);
 
+      // const taskId = row.id;
+      // const response = await axios.delete(`/api/task/${taskId}`);
+      // if (response.status === 200) {
+      //   toast.success("Task deleted successfully");
+      // } else {
+      //   toast.error("Failed to delete task");
+      // }
+
+      // await db.task.delete({
+      //   where: {
+      //     id: task.id,
+      //   },
+      // });
+
       // Simulate deletion with a timeout if no onDelete handler is provided
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // const taskId = task.id;
+      // const res = db.task.delete({
+      //   where:{
+      //     id: taskId
+      //   }
+      // })
+
+      const taskId = task.id;
+      const res = await axios.delete(`/api/task/${taskId}`)
+      console.log(res)
       toast.success("Task deleted successfully");
       console.log("Deleted task:", task.id);
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 404) {
+          console.error("Task not found");
+        } else if (error.response.status === 500) {
+          console.error("Server error");
+        } else {
+          console.error("Error deleting task:", error.message);
+        }
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
       toast.error("Failed to delete task");
-      console.error("Error deleting task:", error);
     } finally {
       setIsDeleting(false);
       setIsDialogBoxOpen(false); // Close dialog after deletion completes (success or error)

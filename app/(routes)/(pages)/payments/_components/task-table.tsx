@@ -1,21 +1,23 @@
 "use client";
-"use memo";
 
 import React from "react";
+import { use } from "react";
 import { Columns } from "./columns";
-import { DataTableFilterField } from "@/types";
+import type { DataTableFilterField } from "@/types";
 import { Label, Priority, Status, type Task } from "@prisma/client";
 import { getLabelIcon, getPriorityIcon, getStatusIcon } from "../_lib/utils";
 import { DataTable } from "@/components/data-table/data-table";
-import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 
 interface TaskDataTableProps<TData> {
-  data: TData[];
+  dataPromise: Promise<TData[]>;
 }
 
 export default function TaskTable<TData extends Task>({
-  data,
+  dataPromise,
 }: TaskDataTableProps<TData>) {
+  // Use the 'use' hook to unwrap the promise
+  const data = use(dataPromise);
+
   const columns = React.useMemo(() => Columns, []);
   const filterFields: DataTableFilterField<Task>[] = [
     {
@@ -54,6 +56,7 @@ export default function TaskTable<TData extends Task>({
       })),
     },
   ];
+
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 flex">
       <div className="flex items-center justify-between space-y-2">
@@ -64,19 +67,7 @@ export default function TaskTable<TData extends Task>({
           </p>
         </div>
       </div>
-      <React.Suspense
-        fallback={
-          <DataTableSkeleton
-            columnCount={5}
-            searchableColumnCount={1}
-            filterableColumnCount={2}
-            cellWidths={["10rem", "40rem", "12rem", "12rem", "8rem"]}
-            shrinkZero
-          />
-        }
-      >
-        <DataTable data={data} columns={columns} filterFields={filterFields} />
-      </React.Suspense>
+      <DataTable data={data} columns={columns} filterFields={filterFields} />
     </div>
   );
 }

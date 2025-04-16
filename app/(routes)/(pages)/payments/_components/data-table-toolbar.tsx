@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { DataTableFilterField } from "@/types";
 
@@ -14,6 +12,8 @@ import { CalendarDatePicker } from "@/components/data-table/calendar-date-picker
 import { DataTableViewOptions } from "@/components/data-table/data-table-view-options";
 import { DataTableExportActions } from "@/components/data-table/data-table-export-actions";
 import { CreateTaskDialog } from "./create-dialog-box";
+import { DeleteTasksDialog } from "./delete-tasks-dialog";
+import { Task } from "@prisma/client";
 
 interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -86,7 +86,7 @@ export function DataTableToolbar<TData>({
         <CalendarDatePicker
           date={dateRange}
           onDateSelect={handleDateSelect}
-          className="h-9 cursor-pointer hidden md:flex"
+          className="h-[33px] cursor-pointer hidden md:flex"
           variant="outline"
         />
 
@@ -105,10 +105,12 @@ export function DataTableToolbar<TData>({
       {/* Right side controls */}
       <div className="grid grid-cols-2 md:flex gap-2 items-center w-full md:w-auto justify-end">
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <Button variant="outline" size="sm" className="order-4 md:order-1">
-            <TrashIcon className="mr-1 size-4" aria-hidden="true" />
-            Delete ({table.getFilteredSelectedRowModel().rows.length})
-          </Button>
+          <DeleteTasksDialog
+            tasks={table
+              .getFilteredSelectedRowModel()
+              .rows.map((row) => row.original as Task)}
+            onSuccess={() => table.toggleAllRowsSelected(false)}
+          />
         )}
         <CreateTaskDialog />
         <DataTableExportActions table={table} />
